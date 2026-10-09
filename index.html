@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d47a1">
+  <meta name="description" content="تطبيق مباريات التوظيف بالمغرب، للبحث عن فرص التوظيف والوصول إلى الإعلانات الرسمية.">
+  <title>مباريات التوظيف بالمغرب 2026</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.png" type="image/png">  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      color: #263238;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #0d47a1;
+      color: white;
+      padding: 25px 15px;
+      text-align: center;
+    }
+
+    header h1 { margin: 0 0 8px; font-size: 25px; }
+    header p { margin: 0; }
+
+    main {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 0 14px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 3px 12px #0000000c;
+    }
+
+    h2 { color: #0d47a1; font-size: 20px; margin-top: 0; }
+
+    input, select, button, .btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      margin: 10px 0;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    input, select {
+      border: 1px solid #cbd5e1;
+      background: white;
+    }
+
+    button, .btn {
+      border: 0;
+      background: #0d47a1;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .green { background: #18864b; }
+    .gray { background: #455a64; }
+
+    .notice {
+      background: #fff8e1;
+      border-right: 4px solid #ffb300;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .result {
+      border: 1px solid #e0e7ef;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .result h3 { margin: 0 0 5px; font-size: 17px; }
+    .result p { margin: 4px 0; font-size: 14px; }
+    .small { font-size: 13px; color: #607080; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #607080;
+      font-size: 13px;
+    }
+  </style></head><body>
+  <header>
+    <h1>🇲🇦 مباريات التوظيف بالمغرب</h1>
+    <p>اكتشف فرص التوظيف وتابع الإعلانات الرسمية</p>
+  </header>  <main>
+    <section class="card">
+      <h2>🔎 البحث عن المباريات</h2>
+      <input id="search" type="search" placeholder="كتب اسم القطاع أو الوظيفة..." aria-label="البحث عن مباراة">
+      <select id="sector" aria-label="اختيار القطاع">
+        <option value="">جميع القطاعات</option>
+        <option value="الصحة">الصحة</option>
+        <option value="التعليم">التعليم</option>
+        <option value="الأمن">الأمن</option>
+        <option value="الجماعات">الجماعات الترابية</option>
+        <option value="الإدارة">الإدارة العمومية</option>
+      </select>
+      <button onclick="searchJobs()">بحث</button>
+      <button class="gray" onclick="resetSearch()">إظهار الكل</button>
+    </section><section class="card">
+  <h2>📋 المباريات الرسمية</h2>
+  <p>للاطلاع على إعلانات التوظيف المنشورة رسمياً، استعمل البوابة الحكومية.</p>
+  <a class="btn green"
+     href="https://www.emploi-public.ma/"
+     target="_blank" rel="noopener noreferrer">
+    مشاهدة الموقع الرسمي
+  </a>
+  <p class="small">ملاحظة: هذا التطبيق دليل مساعد، ويجب التأكد من الشروط والآجال في الإعلان الرسمي.</p>
+</section>
+
+<section class="card">
+  <h2>💼 مباريات مقترحة</h2>
+  <div id="results" aria-live="polite"></div>
+  <p class="notice">المباريات المعروضة هنا أمثلة توضيحية فقط، وليست إعلانات توظيف مؤكدة أو مفتوحة. تحقق من البوابة الرسمية قبل التقديم.</p>
+</section>
+
+<section class="card">
+  <h2>📱 تثبيت التطبيق</h2>
+  <p>إذا كان المتصفح يدعم التثبيت، تقدر تضيف التطبيق إلى الشاشة الرئيسية.</p>
+  <button id="installBtn" hidden>تثبيت التطبيق</button>
+  <p id="installMessage" class="small">في بعض الهواتف، افتح قائمة المتصفح واختر «إضافة إلى الشاشة الرئيسية».</p>
+</section>
+
+  </main>  <footer>
+    <p>مباريات التوظيف بالمغرب 2026</p>
+    <p>تحقق دائماً من المصادر الرسمية قبل إرسال أي ملف أو معلومات شخصية.</p>
+  </footer>  <script>
+    const jobs = [
+      {
+        title: "مباريات قطاع الصحة",
+        sector: "الصحة",
+        description: "تحقق من مباريات التوظيف وشروط الترشيح عبر الإعلانات الرسمية."
+      },
+      {
+        title: "مباريات قطاع التعليم",
+        sector: "التعليم",
+        description: "راجع إعلانات التوظيف والمباريات الخاصة بقطاع التعليم."
+      },
+      {
+        title: "مباريات الأمن",
+        sector: "الأمن",
+        description: "تحقق من شروط الترشيح والمواعيد عبر المواقع الرسمية المختصة."
+      },
+      {
+        title: "مباريات الجماعات الترابية",
+        sector: "الجماعات",
+        description: "تابع إعلانات الجماعات والعمالات والجهات المعنية."
+      },
+      {
+        title: "مباريات الإدارة العمومية",
+        sector: "الإدارة",
+        description: "ابحث عن فرص التوظيف في الإدارات والمؤسسات العمومية."
+      }
+    ];
+
+    function renderJobs(list) {
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      if (list.length === 0) {
+        results.textContent = "ما لقينا حتى نتيجة. جرب كلمات أخرى.";
+        return;
+      }
+
+      list.forEach(job => {
+        const item = document.createElement("div");
+        item.className = "result";
+
+        const title = document.createElement("h3");
+        title.textContent = job.title;
+
+        const sector = document.createElement("p");
+        sector.textContent = "القطاع: " + job.sector;
+
+        const description = document.createElement("p");
+        description.textContent = job.description;
+
+        const link = document.createElement("a");
+        link.className = "btn";
+        link.href = "https://www.emploi-public.ma/";
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "تحقق من الإعلانات الرسمية";
+
+        item.append(title, sector, description, link);
+        results.appendChild(item);
+      });
+    }
+
+    function searchJobs() {
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      const sector = document.getElementById("sector").value;
+
+      const filtered = jobs.filter(job => {
+        const matchesQuery =
+          (job.title + " " + job.sector + " " + job.description)
+          .toLowerCase().includes(query);
+        const matchesSector = !sector || job.sector === sector;
+        return matchesQuery && matchesSector;
+      });
+
+      renderJobs(filtered);
+    }
+
+    function resetSearch() {
+      document.getElementById("search").value = "";
+      document.getElementById("sector").value = "";
+      renderJobs(jobs);
+    }
+
+    document.getElementById("search").addEventListener("keydown", event => {
+      if (event.key === "Enter") searchJobs();
+    });
+
+    renderJobs(jobs);
+
+    let installPrompt;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installPrompt = event;
+      installBtn.hidden = false;
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!installPrompt) return;
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null;
+      installBtn.hidden = true;
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(error => {
+          console.error("Service Worker:", error);
+        });
+      });
+    }
+  </script></body>
+</html>
